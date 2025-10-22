@@ -366,6 +366,7 @@ public class App {
                 res.status(400);
                 return objectMapper.writeValueAsString(Map.of("error", "Ya existe una persona con este dni"));
             }**/
+            //Base.openTransaction();
             try {
 
 
@@ -383,10 +384,11 @@ public class App {
             Profesor profesor = new Profesor();
             profesor.setDni(dni);; // Mismo DNI que la persona
             profesor.saveIt();
+            //Base.commitTransaction();
 
                 res.status(201); // Created.
                 // Devuelve una respuesta JSON con el mensaje y el ID del nuevo usuario.
-                return objectMapper.writeValueAsString(Map.of("message", "Usuario '" + name + "' registrado con éxito.", "id", profesor.getId()));
+                return objectMapper.writeValueAsString(Map.of("message", "Usuario '" + name + "' registrado con éxito." + "id" + profesor.getIdProfesor()));
 
             } catch (Exception e) {
                 // Si ocurre cualquier error durante la operación de DB, se captura aquí.

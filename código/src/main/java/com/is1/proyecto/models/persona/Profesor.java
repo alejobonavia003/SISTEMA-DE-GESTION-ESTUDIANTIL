@@ -24,4 +24,6 @@ public class Profesor extends PersonaAbs {
         setTelefono(telefono);
         setDni(dni);
     }
+
+
 }
