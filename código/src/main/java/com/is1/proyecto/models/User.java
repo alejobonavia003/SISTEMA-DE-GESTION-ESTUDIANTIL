@@ -3,6 +3,8 @@ package com.is1.proyecto.models;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
+import com.is1.proyecto.models.persona.*;
+
 @Table("users") // Esta anotación asocia explícitamente el modelo 'User' con la tabla 'users' en la DB.
 public class User extends Model {
 
