@@ -10,13 +10,7 @@ import org.javalite.activejdbc.annotations.Table;
 @Table("Persona")
 public abstract class PersonaAbs extends Model {
   // Atributos privados
-  private String nombre;
-  private String apellido;
-  private String email;
-  private String direccion;
-  private String telefono;
-  private Integer edad;
-  private Integer dni;
+
 
   // Getters y setters usando ActiveJDBC
   public String getNombre() {
@@ -25,7 +19,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setNombre(String nombre) {
     set("nombre", nombre);
-    this.nombre = nombre;
+   
   }
 
   public String getApellido() {
@@ -34,7 +28,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setApellido(String apellido) {
     set("apellido", apellido);
-    this.apellido = apellido;
+    
   }
 
   public String getEmail() {
@@ -43,7 +37,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setEmail(String email) {
     set("email", email);
-    this.email = email;
+   
   }
 
   public String getDireccion() {
@@ -52,7 +46,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setDireccion(String direccion) {
     set("direccion", direccion);
-    this.direccion = direccion;
+ 
   }
 
   public String getTelefono() {
@@ -61,7 +55,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setTelefono(String telefono) {
     set("telefono", telefono);
-    this.telefono = telefono;
+
   }
 
   public Integer getEdad() {
@@ -70,7 +64,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setEdad(Integer edad) {
     set("edad", edad);
-    this.edad = edad;
+ 
   }
 
   public Integer getDni() {
@@ -79,6 +73,6 @@ public abstract class PersonaAbs extends Model {
 
   public void setDni(Integer dni) {
     set("dni", dni);
-    this.dni = dni;
+   
   }
 }

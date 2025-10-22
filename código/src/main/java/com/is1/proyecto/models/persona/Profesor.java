@@ -7,6 +7,12 @@ import org.javalite.activejdbc.annotations.Table;
 
 public class Profesor extends PersonaAbs {
     String idProfesor;
+    public String getIdProfesor() {
+        return getString("id_doc");
+    }
 
-    
+    public void setIdProfesor(String idProfesor) {
+        set("id_doc", idProfesor);
+        this.idProfesor = idProfesor;
+    }
 }
