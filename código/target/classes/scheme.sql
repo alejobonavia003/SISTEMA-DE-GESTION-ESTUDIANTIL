@@ -22,7 +22,7 @@ CREATE TABLE Persona (
 -- Estudiante hereda de Persona (1 a 1)
 CREATE TABLE Estudiante (
     dni INTEGER PRIMARY KEY,
-    legajo TEXT,
+    estado TEXT CHECK (estado IN ('AVANZADO', 'INGRESANTE')),
     FOREIGN KEY (dni) REFERENCES Persona(dni)
 );
 
