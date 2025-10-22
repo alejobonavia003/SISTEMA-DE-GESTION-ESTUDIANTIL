@@ -1,7 +1,12 @@
 # Compiled class file
 *.class
 /target
+<<<<<<< HEAD
 /código/target
+=======
+/código/target/
+
+>>>>>>> 8a8ce61 (template para profesora)
 
 # Log file
 *.log
