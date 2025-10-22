@@ -28,8 +28,9 @@ CREATE TABLE Estudiante (
 
 -- Profesor hereda de Persona (1 a 1)
 CREATE TABLE Profesor (
-    dni INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_doc TEXT,
+    dni INTEGER PRIMARY KEY,
+    id_doc TEXT AUTOINCREMENT
+    ,
     FOREIGN KEY (dni) REFERENCES Persona(dni)
 );
 
