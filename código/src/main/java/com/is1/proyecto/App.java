@@ -334,7 +334,7 @@ public class App {
 
             // 2. Si el usuario está logueado, añade el nombre de usuario al modelo para la plantilla.
             model.put("username", currentUsername);
-            return new ModelAndView(new HashMap<>(), "altaProfesor.mustache");
+            return new ModelAndView(new HashMap<>(), "alta_profesor.mustache");
         }, new MustacheTemplateEngine());
 
     } // Fin del método main
