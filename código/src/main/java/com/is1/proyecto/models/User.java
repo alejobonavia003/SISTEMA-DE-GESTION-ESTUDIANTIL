@@ -5,7 +5,7 @@ import org.javalite.activejdbc.annotations.Table;
 
 
 
-@Table("users") // Esta anotación asocia explícitamente el modelo 'User' con la tabla 'users' en la DB.
+@Table("users") // Esta anotación asoscia explícitamente el modelo 'User' con la tabla 'users' en la DB.
 public class User extends Model {
 
     // ActiveJDBC mapea automáticamente las columnas de la tabla 'users'

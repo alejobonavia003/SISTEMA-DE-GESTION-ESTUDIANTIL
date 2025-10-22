@@ -10,6 +10,8 @@ import org.mindrot.jbcrypt.BCrypt; // Utilidad para hashear y verificar contrase
 import com.fasterxml.jackson.databind.ObjectMapper; // Representa un modelo de datos y el nombre de la vista a renderizar.
 import com.is1.proyecto.config.DBConfigSingleton; // Motor de plantillas Mustache para Spark.
 import com.is1.proyecto.models.User; // Para crear mapas de datos (modelos para las plantillas).
+import com.is1.proyecto.models.persona.PersonaAbs;
+import com.is1.proyecto.models.persona.Profesor;
 
 import spark.ModelAndView; // Interfaz Map, utilizada para Map.of() o HashMap.
 import static spark.Spark.after; // Clase Singleton para la configuración de la base de datos.
@@ -337,41 +339,61 @@ public class App {
             return new ModelAndView(new HashMap<>(), "alta_profesor.mustache");
         }, new MustacheTemplateEngine());
 
-        post("/add_userssssss", (req, res) -> {
+        post("/profesor", (req, res) -> {
             res.type("application/json"); // Establece el tipo de contenido de la respuesta a JSON.
 
-            // Obtiene los parámetros 'name' y 'password' de la solicitud.
-            String name = req.queryParams("name");
-            String password = req.queryParams("password");
+            // Obtiene los parámetros del formulario de la solicitud.
+            String name = req.queryParams("nombre");
+            String apellido = req.queryParams("apellido");
+            String dniS = req.queryParams("dni");
+            String telefono = req.queryParams("telefono");
+            String direccion = req.queryParams("direccion");
+            String email = req.queryParams("email");
+
+
+            //System.out.println(name + apellido + dni + telefono + direccion + email);
 
             // --- Validaciones básicas ---
-            if (name == null || name.isEmpty() || password == null || password.isEmpty()) {
+            if (name == null || name.isEmpty()|| apellido == null|| apellido.isEmpty() || email == null || email.isEmpty() || dniS == null || dniS.isEmpty() || telefono == null || telefono.isEmpty() || direccion == null || direccion.isEmpty()) {
                 res.status(400); // Bad Request.
-                return objectMapper.writeValueAsString(Map.of("error", "Nombre y contraseña son requeridos."));
+                return objectMapper.writeValueAsString(Map.of("error", "Debes rellenar todos los campos para registrar"));
             }
-
+            // --- Creación y guardado del profesor usando el modelo ActiveJDBC ---
+            Integer dni = Integer.parseInt(dniS); // el dnni se pasaba como string
+            // existe una persona con este DNI?????
+            /**PersonaAbs personaExistente = PersonaAbs.findFirst("dni = ?", dni);
+            if (personaExistente != null) {
+                res.status(400);
+                return objectMapper.writeValueAsString(Map.of("error", "Ya existe una persona con este dni"));
+            }**/
             try {
-                // --- Creación y guardado del usuario usando el modelo ActiveJDBC ---
-                User newUser = new User(); // Crea una nueva instancia de tu modelo User.
-                // ¡ADVERTENCIA DE SEGURIDAD CRÍTICA!
-                // En una aplicación real, las contraseñas DEBEN ser hasheadas (ej. con BCrypt)
-                // ANTES de guardarse en la base de datos, NUNCA en texto plano.
-                // (Nota: El código original tenía la contraseña en texto plano aquí.
-                // Se recomienda usar `BCrypt.hashpw(password, BCrypt.gensalt())` como en la ruta '/user/new').
-                newUser.set("name", name); // Asigna el nombre al campo 'name'.
-                newUser.set("password", password); // Asigna la contraseña al campo 'password'.
-                newUser.saveIt(); // Guarda el nuevo usuario en la tabla 'users'.
+
+
+            // 1. Primero crear la Persona (esto llenará la tabla Persona)
+            PersonaAbs persona = new PersonaAbs();
+            persona.setDni(dni);
+            persona.setNombre(name);
+            persona.setApellido(apellido);
+            persona.setTelefono(telefono);
+            persona.setDireccion(direccion);
+            persona.setEmail(email);
+            persona.saveIt();
+            
+            // 2. Luego crear el Profesor (esto llenará la tabla Profesor con el mismo dni)
+            Profesor profesor = new Profesor();
+            profesor.setDni(dni);; // Mismo DNI que la persona
+            profesor.saveIt();
 
                 res.status(201); // Created.
                 // Devuelve una respuesta JSON con el mensaje y el ID del nuevo usuario.
-                return objectMapper.writeValueAsString(Map.of("message", "Usuario '" + name + "' registrado con éxito.", "id", newUser.getId()));
+                return objectMapper.writeValueAsString(Map.of("message", "Usuario '" + name + "' registrado con éxito.", "id", profesor.getId()));
 
             } catch (Exception e) {
                 // Si ocurre cualquier error durante la operación de DB, se captura aquí.
-                System.err.println("Error al registrar usuario: " + e.getMessage());
+                System.err.println("Error al registrar profesor: " + e.getMessage());
                 e.printStackTrace(); // Imprime el stack trace para depuración.
                 res.status(500); // Internal Server Error.
-                return objectMapper.writeValueAsString(Map.of("error", "Error interno al registrar usuario: " + e.getMessage()));
+                return objectMapper.writeValueAsString(Map.of("error", "Error interno al registrar profesor: " + e.getMessage()));
             }
         });
 

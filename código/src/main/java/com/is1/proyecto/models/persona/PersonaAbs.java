@@ -8,7 +8,7 @@ import org.javalite.activejdbc.annotations.Table;
 
 
 @Table("Persona")
-public abstract class PersonaAbs extends Model {
+ class PersonaAbs extends Model {
   // Atributos privados
 
 
@@ -58,15 +58,6 @@ public abstract class PersonaAbs extends Model {
 
   }
 
-  public Integer getEdad() {
-    return getInteger("edad"); 
-  }
-
-  public void setEdad(Integer edad) {
-    set("edad", edad);
- 
-  }
-
   public Integer getDni() {
     return getInteger("dni");
   }
@@ -75,4 +66,12 @@ public abstract class PersonaAbs extends Model {
     set("dni", dni);
    
   }
+
+    public static PersonaAbs findByDni(Integer dni) {
+        return findFirst("dni = ?", dni);
+    }
+    
+    public static boolean existsByDni(Integer dni) {
+        return count("dni = ?", dni) > 0;
+    }
 }
