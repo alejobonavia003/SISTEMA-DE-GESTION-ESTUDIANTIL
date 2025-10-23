@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de profesores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+    <body>
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Tabla de Profesores</h1>
+         <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+            <thead class="bg-gray-200 text-gray-700">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Correo</th>
+                <th>Telefono</th>
+                <th>Direccion</th>
+            </tr>
+
+             {{#profesor}}
+                <tr>
+                  <td>{{id}}</td>
+                  <td>{{nombre}}</td>
+                  <td>{{apellido}}</td>
+                </tr>
+            {{/profesor}}
+
+             {{^profesor}}
+                <tr>
+                  <td colspan="7" 
+                   class="py-4 text-center text-gray-600"
+                  > 
+                  No hay profesores registrados.
+                  </td>
+                </tr>
+
+            {{/profesor}}
+        </table>    
+    </body>
