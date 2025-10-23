@@ -1,5 +1,7 @@
 package com.is1.proyecto; // Define el paquete de la aplicación, debe coincidir con la estructura de carpetas.
 
+import java.util.ArrayList;
+import java.util.Collection;
 // Importaciones necesarias para la aplicación Spark
 import java.util.HashMap; // Utilidad para serializar/deserializar objetos Java a/desde JSON.
 import java.util.Map; // Importa los métodos estáticos principales de Spark (get, post, before, after, etc.).
@@ -403,7 +405,7 @@ public class App {
                 
         } );
 
-            get("/prof/create", (req, res) -> {
+        get("/prof/create", (req, res) -> {
             Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
 
             // Obtener y añadir mensaje de éxito de los query parameters (ej. ?message=Cuenta creada!)
@@ -422,5 +424,18 @@ public class App {
             return new ModelAndView(model, "alta_profesor.mustache");
         }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
 
+       /** get("/listar-profesores", (req, res) -> {
+            Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
+            ArrayList<Profesor> profesores = new ArrayList<>();
+
+            //profesores.addAll(Base.findAll("profesor"));
+            System.out.print(Base.findAll("select * from Profesor"));
+            //model.put();            
+            
+
+            // Renderiza la plantilla 'user_form.mustache' con los datos del modelo.
+            return new ModelAndView(model, "table_profesor.mustache");
+        }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
+**/
     } // Fin del método main
 } // Fin de la clase App
