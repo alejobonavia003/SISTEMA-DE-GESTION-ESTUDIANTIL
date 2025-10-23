@@ -12,7 +12,8 @@ import org.javalite.activejdbc.annotations.Table;
 
 public abstract class PersonaAbs extends Model {
 
-
+  String nombre,apellido,email,direccion,telefono;
+  Integer dni;
 
   // Getters y setters usando ActiveJDBC
   public String getNombre() {
@@ -21,6 +22,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setNombre(String nombre) {
     set("nombre", nombre);
+    this.nombre = nombre;
    
   }
 
@@ -30,6 +32,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setApellido(String apellido) {
     set("apellido", apellido);
+    this.apellido = apellido;
     
   }
 
@@ -39,6 +42,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setEmail(String email) {
     set("email", email);
+    this.email = email;
    
   }
 
@@ -48,6 +52,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setDireccion(String direccion) {
     set("direccion", direccion);
+    this.direccion = direccion;
  
   }
 
@@ -57,6 +62,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setTelefono(String telefono) {
     set("telefono", telefono);
+    this.telefono = telefono;
 
   }
 
@@ -66,6 +72,7 @@ public abstract class PersonaAbs extends Model {
 
   public void setDni(Integer dni) {
     set("dni", dni);
+    this.dni = dni;
    
   }
 

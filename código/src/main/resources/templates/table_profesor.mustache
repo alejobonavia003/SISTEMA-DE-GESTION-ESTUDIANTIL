@@ -15,16 +15,15 @@
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>DNI</th>
-                <th>Correo</th>
-                <th>Telefono</th>
-                <th>Direccion</th>
+                
             </tr>
 
              {{#profesor}}
                 <tr>
-                  <td>{{id}}</td>
-                  <td>{{nombre}}</td>
-                  <td>{{apellido}}</td>
+                  <td>{{profesor.id}}</td>
+                  <td>{{profesor.nombre}}</td>
+                  <td>{{profesor.apellido}}</td>
+                  <td>{{profesor.dni}}</td>
                 </tr>
             {{/profesor}}
 
