@@ -8,8 +8,10 @@ import org.javalite.activejdbc.annotations.Table;
 
 //ESTA CLASE TIENE QUE SER ABSTRACTA
 
+@Table("Persona")
+
 public abstract class PersonaAbs extends Model {
-  // Atributos privados
+
 
 
   // Getters y setters usando ActiveJDBC
