@@ -1,14 +1,14 @@
 package com.is1.proyecto.models.persona;
 
-
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
 
 
+
 //ESTA CLASE TIENE QUE SER ABSTRACTA
-@Table("Persona")
-public class PersonaAbs extends Model {
+
+public abstract class PersonaAbs extends Model {
   // Atributos privados
 
 

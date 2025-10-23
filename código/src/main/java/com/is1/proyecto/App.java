@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper; // Representa un modelo de d
 import com.is1.proyecto.config.DBConfigSingleton; // Motor de plantillas Mustache para Spark.
 import com.is1.proyecto.models.User; // Para crear mapas de datos (modelos para las plantillas).
 import com.is1.proyecto.models.persona.PersonaAbs;
+import com.is1.proyecto.models.persona.PersonaConcreta;
 import com.is1.proyecto.models.persona.Profesor;
 
 import spark.ModelAndView; // Interfaz Map, utilizada para Map.of() o HashMap.
@@ -351,7 +352,7 @@ public class App {
             String email = req.queryParams("email");
 
 
-            //System.out.println(name + apellido + dni + telefono + direccion + email);
+      
 
             // --- Validaciones básicas ---
             if (name == null || name.isEmpty()|| apellido == null|| apellido.isEmpty() || email == null || email.isEmpty() || dniS == null || dniS.isEmpty() || telefono == null || telefono.isEmpty() || direccion == null || direccion.isEmpty()) {
@@ -371,7 +372,7 @@ public class App {
 
 
             // 1. Primero crear la Persona (esto llenará la tabla Persona)
-            PersonaAbs persona = new PersonaAbs();
+            PersonaAbs persona = new PersonaConcreta();
             persona.setDni(dni);
             persona.setNombre(name);
             persona.setApellido(apellido);
@@ -386,18 +387,40 @@ public class App {
             profesor.saveIt();
             //Base.commitTransaction();
 
-                res.status(201); // Created.
+                
                 // Devuelve una respuesta JSON con el mensaje y el ID del nuevo usuario.
-                return objectMapper.writeValueAsString(Map.of("message", "Usuario '" + name + "' registrado con éxito." + "id" + profesor.getIdProfesor()));
+                
+               res.redirect("/prof/create?message=Profesor " + name + " agregado exitosamente!");
+               return "";
 
             } catch (Exception e) {
                 // Si ocurre cualquier error durante la operación de DB, se captura aquí.
                 System.err.println("Error al registrar profesor: " + e.getMessage());
                 e.printStackTrace(); // Imprime el stack trace para depuración.
-                res.status(500); // Internal Server Error.
-                return objectMapper.writeValueAsString(Map.of("error", "Error interno al registrar profesor: " + e.getMessage()));
+                res.redirect("/prof/create?error=Error interno al crear el profesor. Intente de nuevo.");
+                return "";
             }
-        });
+                
+        } );
+
+            get("/prof/create", (req, res) -> {
+            Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
+
+            // Obtener y añadir mensaje de éxito de los query parameters (ej. ?message=Cuenta creada!)
+            String successMessage = req.queryParams("message");
+            if (successMessage != null && !successMessage.isEmpty()) {
+                model.put("successMessage", successMessage);
+            }
+
+            // Obtener y añadir mensaje de error de los query parameters (ej. ?error=Campos vacíos)
+            String errorMessage = req.queryParams("error");
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                model.put("errorMessage", errorMessage);
+            }
+
+            // Renderiza la plantilla 'user_form.mustache' con los datos del modelo.
+            return new ModelAndView(model, "alta_profesor.mustache");
+        }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
 
     } // Fin del método main
 } // Fin de la clase App

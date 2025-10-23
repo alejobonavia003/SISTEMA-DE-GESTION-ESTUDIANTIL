@@ -11,9 +11,10 @@ public class Profesor extends PersonaAbs {
     public String getIdProfesor() {
         return getString("id_doc");
     }
-    
-    // Constructor por defecto
-    public Profesor() {}
+
+    public Profesor() {
+        super();
+    }
     
     // Constructor con parámetros
     public Profesor(String nombre, String apellido, String email, String direccion, String telefono, Integer dni) {
