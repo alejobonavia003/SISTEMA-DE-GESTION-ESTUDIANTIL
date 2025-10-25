@@ -11,12 +11,12 @@ CREATE TABLE users (
 
 -- Tabla base de personas
 CREATE TABLE Persona (
-    dni INTEGER PRIMARY KEY,
+    dni INTEGER PRIMARY KEY UNIQUE,
     nombre TEXT NOT NULL,
     apellido TEXT NOT NULL,
     telefono TEXT,
     direccion TEXT,
-    email TEXT
+    email TEXT UNIQUE
 );
 
 -- Estudiante hereda de Persona (1 a 1)
