@@ -328,6 +328,22 @@ public class App {
             String currentUsername = req.session().attribute("currentUserUsername");
             Boolean loggedIn = req.session().attribute("loggedIn");
 
+            // Obtener y añadir mensaje de éxito de los query parameters (ej. ?message=Cuenta creada!)
+            String successMessage = req.queryParams("message");
+           
+            if (successMessage != null && !successMessage.isEmpty()) {
+                 System.out.println("DEBUGGG :::::::::::::::"+successMessage);
+                model.put("successMessage", successMessage);
+            }
+
+            // Obtener y añadir mensaje de error de los query parameters (ej. ?error=Campos vacíos)
+            String errorMessage = req.queryParams("error");
+            
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                System.out.println("DEBUGGG :::::::::::::::"+errorMessage);
+                model.put("errorMessage", errorMessage);
+            }
+
             // 1. Verificar si el usuario ha iniciado sesión.
             // Si no hay un nombre de usuario en la sesión, la bandera es nula o falsa,
             // significa que el usuario no está logueado o su sesión expiró.
@@ -340,10 +356,10 @@ public class App {
 
             // 2. Si el usuario está logueado, añade el nombre de usuario al modelo para la plantilla.
             model.put("username", currentUsername);
-            return new ModelAndView(new HashMap<>(), "alta_profesor.mustache");
+            return new ModelAndView(model, "alta_profesor.mustache");
         }, new MustacheTemplateEngine());
 
-        //registrar profesores
+        //registrar profesores OKKK
         post("/profesor", (req, res) -> {
             res.type("application/json"); // Establece el tipo de contenido de la respuesta a JSON.
 
@@ -357,18 +373,19 @@ public class App {
 
             // --- Validaciones básicas ---
             if (name == null || name.isEmpty()|| apellido == null|| apellido.isEmpty() || email == null || email.isEmpty() || dniS == null || dniS.isEmpty() || telefono == null || telefono.isEmpty() || direccion == null || direccion.isEmpty()) {
-                res.status(400); // Bad Request.
-                return objectMapper.writeValueAsString(Map.of("error", "Debes rellenar todos los campos para registrar"));
+                res.redirect("/alta-profesor?error=Debes rellenar todos los campos");
             }
             // --- Creación y guardado del profesor usando el modelo ActiveJDBC ---
             Integer dni = Integer.parseInt(dniS); // el dnni se pasaba como string
             // existe una persona con este DNI?????
-            /**PersonaAbs personaExistente = PersonaAbs.findFirst("dni = ?", dni);
-            if (personaExistente != null) {
-                res.status(400);
-                return objectMapper.writeValueAsString(Map.of("error", "Ya existe una persona con este dni"));
-            }**/
-            //Base.openTransaction();
+            PersonaAbs dniExistente = PersonaConcreta.findFirst("dni = ?", dni);
+            PersonaAbs emailExistente = PersonaConcreta.findFirst("dni = ?", email);
+            if (dniExistente != null || emailExistente != null) {
+                res.redirect("/alta-profesor?error=DNI o EMAIL ya existente!!!");
+                return "";
+            }
+
+
             try {
 
 
@@ -386,48 +403,26 @@ public class App {
             Profesor profesor = new Profesor();
             profesor.setDni(dni); // Mismo DNI que la persona
             profesor.saveIt();
-            //Base.commitTransaction();
 
                 
-            // Devuelve una respuesta JSON con el mensaje y el ID del nuevo usuario. 
-            res.redirect("/prof/create?message=Profesor " + name + " agregado exitosamente!");
+            // Devuelve una respuesta JSON con el mensaje y el nombre del profesor. 
+            res.redirect("/alta-profesor?message=Profesor " + name + " agregado exitosamente!");
             return "";
 
             } catch (Exception e) {
                 // Si ocurre cualquier error durante la operación de DB, se captura aquí.
                 System.err.println("Error al registrar profesor: " + e.getMessage());
                 e.printStackTrace(); // Imprime el stack trace para depuración.
-                res.redirect("/prof/create?error=Error interno al crear el profesor. Intente de nuevo.");
+                res.redirect("/alta-profesor?error=Error interno al crear el profesor. Intente de nuevo.");
                 return "";
             }
                 
         } );
         
-        get("/prof/create", (req, res) -> {
-            Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
-
-            // Obtener y añadir mensaje de éxito de los query parameters (ej. ?message=Cuenta creada!)
-            String successMessage = req.queryParams("message");
-            if (successMessage != null && !successMessage.isEmpty()) {
-                model.put("successMessage", successMessage);
-            }
-
-            // Obtener y añadir mensaje de error de los query parameters (ej. ?error=Campos vacíos)
-            String errorMessage = req.queryParams("error");
-            if (errorMessage != null && !errorMessage.isEmpty()) {
-                model.put("errorMessage", errorMessage);
-            }
-
-            // Renderiza la plantilla 'user_form.mustache' con los datos del modelo.
-            return new ModelAndView(model, "alta_profesor.mustache");
-        }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
 
         get("/listar-profesores", (req, res) -> {
             Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
-            //ArrayList<Profesor> profesores = new ArrayList<>();
-
-            //profesores.addAll(Base.findAll("profesor"));
-            //System.out.print(Base.findAll("select * from Profesor"));           
+         
         try {
         
             List<PersonaConcreta> profesores = PersonaConcreta.findAll();
@@ -457,5 +452,18 @@ public class App {
             return new ModelAndView(model, "table_profesor.mustache");
         }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
 
+
+
+        get("/error", (req, res) -> {
+            Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
+
+            // Obtener y añadir mensaje de error de los query parameters (ej. ?error=Campos vacíos)
+            String errorMessage = req.queryParams("error");
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                model.put("errorMessage", errorMessage);
+            }
+            // Renderiza la plantilla 'error.mustache' con los datos del modelo.
+            return new ModelAndView(model, "error.mustache");
+        }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
     } // Fin del método main
 } // Fin de la clase App
