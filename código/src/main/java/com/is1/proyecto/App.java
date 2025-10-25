@@ -444,7 +444,7 @@ public class App {
                 profMap.put("apellido", p.getApellido());
                 profMap.put("dni", p.getDni());
                 listaProfesores.add(profMap);
-               // System.out.println("DEBUG::::::::::::::::::     "+p.getInteger("dni"));
+                System.out.println("DEBUG::::::::::::::::::     "+p.getInteger("dni"));
             }
             // Agregar la lista al modelo con la clave 'profesores'
             model.put("profesores", listaProfesores);
