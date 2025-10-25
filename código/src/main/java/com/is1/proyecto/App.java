@@ -1,7 +1,10 @@
 package com.is1.proyecto; // Define el paquete de la aplicación, debe coincidir con la estructura de carpetas.
 
+import java.util.ArrayList;
+import java.util.Collection;
 // Importaciones necesarias para la aplicación Spark
 import java.util.HashMap; // Utilidad para serializar/deserializar objetos Java a/desde JSON.
+import java.util.List;
 import java.util.Map; // Importa los métodos estáticos principales de Spark (get, post, before, after, etc.).
 
 import org.javalite.activejdbc.Base; // Clase central de ActiveJDBC para gestionar la conexión a la base de datos.
@@ -340,6 +343,7 @@ public class App {
             return new ModelAndView(new HashMap<>(), "alta_profesor.mustache");
         }, new MustacheTemplateEngine());
 
+        //registrar profesores
         post("/profesor", (req, res) -> {
             res.type("application/json"); // Establece el tipo de contenido de la respuesta a JSON.
 
@@ -350,9 +354,6 @@ public class App {
             String telefono = req.queryParams("telefono");
             String direccion = req.queryParams("direccion");
             String email = req.queryParams("email");
-
-
-      
 
             // --- Validaciones básicas ---
             if (name == null || name.isEmpty()|| apellido == null|| apellido.isEmpty() || email == null || email.isEmpty() || dniS == null || dniS.isEmpty() || telefono == null || telefono.isEmpty() || direccion == null || direccion.isEmpty()) {
@@ -383,15 +384,14 @@ public class App {
             
             // 2. Luego crear el Profesor (esto llenará la tabla Profesor con el mismo dni)
             Profesor profesor = new Profesor();
-            profesor.setDni(dni);; // Mismo DNI que la persona
+            profesor.setDni(dni); // Mismo DNI que la persona
             profesor.saveIt();
             //Base.commitTransaction();
 
                 
-                // Devuelve una respuesta JSON con el mensaje y el ID del nuevo usuario.
-                
-               res.redirect("/prof/create?message=Profesor " + name + " agregado exitosamente!");
-               return "";
+            // Devuelve una respuesta JSON con el mensaje y el ID del nuevo usuario. 
+            res.redirect("/prof/create?message=Profesor " + name + " agregado exitosamente!");
+            return "";
 
             } catch (Exception e) {
                 // Si ocurre cualquier error durante la operación de DB, se captura aquí.
@@ -402,8 +402,8 @@ public class App {
             }
                 
         } );
-
-            get("/prof/create", (req, res) -> {
+        
+        get("/prof/create", (req, res) -> {
             Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
 
             // Obtener y añadir mensaje de éxito de los query parameters (ej. ?message=Cuenta creada!)
@@ -420,6 +420,41 @@ public class App {
 
             // Renderiza la plantilla 'user_form.mustache' con los datos del modelo.
             return new ModelAndView(model, "alta_profesor.mustache");
+        }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
+
+        get("/listar-profesores", (req, res) -> {
+            Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
+            //ArrayList<Profesor> profesores = new ArrayList<>();
+
+            //profesores.addAll(Base.findAll("profesor"));
+            //System.out.print(Base.findAll("select * from Profesor"));           
+        try {
+        
+            List<PersonaConcreta> profesores = PersonaConcreta.findAll();
+
+            // Crear una lista de mapas para pasar a la vista Mustache  
+            List<Map<String, Object>> listaProfesores = new ArrayList<>();   
+            for (PersonaConcreta p : profesores) {
+                Map<String, Object> profMap = new HashMap<>();
+                profMap.put("id", p.getDni());
+                profMap.put("nombre", p.getNombre());
+                profMap.put("apellido", p.getApellido());
+                profMap.put("dni", p.getDni());
+                listaProfesores.add(profMap);
+                System.out.println("DEBUG::::::::::::::::::     "+p.getInteger("dni"));
+            }
+            // Agregar la lista al modelo con la clave 'profesores'
+            model.put("profesores", listaProfesores);
+
+        } catch (Exception e) {
+            System.err.println("Error al listar profesores: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+
+            // Renderiza la plantilla 'user_form.mustache' con los datos del modelo.
+            return new ModelAndView(model, "table_profesor.mustache");
         }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
 
     } // Fin del método main

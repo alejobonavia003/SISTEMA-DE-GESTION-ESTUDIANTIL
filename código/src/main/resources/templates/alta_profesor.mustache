@@ -7,6 +7,7 @@
 </head>
     <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+<<<<<<< HEAD
 
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Registrar profesor</h1>
 
@@ -59,8 +60,17 @@
                 <div class="text-center mt-4">
                     <a href="/profesor" class="text-blue-600 hover:underline text-sm mt-2 block">Volver al inicio</a>
                 </div> }}
+=======
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Registrar Profesor</h1>
+            <form action="/profesor" method="post">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required><br><br>
+>>>>>>> d98066bfed11b8e5c7cff2b0907e0fb86e47c48c
 
+            <label for="apellido">Apellido:</label>
+            <input type="text" id="apellido" name="apellido" required><br><br>
 
+<<<<<<< HEAD
                 <div class="col-span-1 md:col-span-2 text-center mt-4">
                     <button type="submit"
                             class="bg-blue-600 text-white py-2 px-8 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
@@ -77,5 +87,32 @@
             <p style="color:red;">{{error}}</p>
         {{/error}}
     </div>
+=======
+            <label for="dni">DNI:</label>
+            <input type="text" id="dni" name="dni" required><br><br>
+
+            <label for="email">Correo:</label>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <label for="telefono">Telefono:</label>
+            <input type="text" id="telefono" name="telefono" required><br><br>
+
+            <label for="direccion">Direccion:</label>
+            <input type="text" id="direccion" name="direccion" required><br><br>
+
+
+
+        <button type="submit">Registrar</button>
+
+        <a href="/profesor" class="text-blue-600 hover:underline text-sm mt-2 block">Volver al inicio</a>
+    </form>
+        {{#mensaje}}
+        <p style="color:green;">{{mensaje}}</p>
+    {{/mensaje}}
+
+    {{#error}}
+        <p style="color:red;">{{error}}</p>
+    {{/error}}
+>>>>>>> d98066bfed11b8e5c7cff2b0907e0fb86e47c48c
 </body>
 </html>
