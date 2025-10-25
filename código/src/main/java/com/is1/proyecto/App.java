@@ -343,6 +343,7 @@ public class App {
             return new ModelAndView(new HashMap<>(), "alta_profesor.mustache");
         }, new MustacheTemplateEngine());
 
+        //registrar profesores
         post("/profesor", (req, res) -> {
             res.type("application/json"); // Establece el tipo de contenido de la respuesta a JSON.
 
@@ -353,9 +354,6 @@ public class App {
             String telefono = req.queryParams("telefono");
             String direccion = req.queryParams("direccion");
             String email = req.queryParams("email");
-
-
-      
 
             // --- Validaciones básicas ---
             if (name == null || name.isEmpty()|| apellido == null|| apellido.isEmpty() || email == null || email.isEmpty() || dniS == null || dniS.isEmpty() || telefono == null || telefono.isEmpty() || direccion == null || direccion.isEmpty()) {
@@ -386,15 +384,14 @@ public class App {
             
             // 2. Luego crear el Profesor (esto llenará la tabla Profesor con el mismo dni)
             Profesor profesor = new Profesor();
-            profesor.setDni(dni);; // Mismo DNI que la persona
+            profesor.setDni(dni); // Mismo DNI que la persona
             profesor.saveIt();
             //Base.commitTransaction();
 
                 
-                // Devuelve una respuesta JSON con el mensaje y el ID del nuevo usuario.
-                
-               res.redirect("/prof/create?message=Profesor " + name + " agregado exitosamente!");
-               return "";
+            // Devuelve una respuesta JSON con el mensaje y el ID del nuevo usuario. 
+            res.redirect("/prof/create?message=Profesor " + name + " agregado exitosamente!");
+            return "";
 
             } catch (Exception e) {
                 // Si ocurre cualquier error durante la operación de DB, se captura aquí.
@@ -405,7 +402,7 @@ public class App {
             }
                 
         } );
-
+        
         get("/prof/create", (req, res) -> {
             Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
 
