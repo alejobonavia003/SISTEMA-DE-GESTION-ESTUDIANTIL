@@ -218,6 +218,8 @@ public class App {
                 return new ModelAndView(model, "login.mustache"); // Renderiza la plantilla de login con error.
             }
 
+            
+
             // Busca la cuenta en la base de datos por el nombre de usuario.
             User ac = User.findFirst("name = ?", username);
 
@@ -299,20 +301,17 @@ public class App {
             }
         });
 
+        // profesor OKKK
         get("/profesor", (req, res) -> {
             Map<String, Object> model = new HashMap<>(); // Modelo para la plantilla del dashboard.
 
             // Intenta obtener el nombre de usuario y la bandera de login de la sesión.
             String currentUsername = req.session().attribute("currentUserUsername");
             Boolean loggedIn = req.session().attribute("loggedIn");
-
-            // 1. Verificar si el usuario ha iniciado sesión.
-            // Si no hay un nombre de usuario en la sesión, la bandera es nula o falsa,
-            // significa que el usuario no está logueado o su sesión expiró.
             if (currentUsername == null || loggedIn == null || !loggedIn) {
                 System.out.println("DEBUG: Acceso no autorizado a /dashboard. Redirigiendo a /login.");
                 // Redirige al login con un mensaje de error.
-                res.redirect("/login?error=Debes iniciar sesión para acceder a esta página.");
+                res.redirect("?error=Debes iniciar sesion para acceder a esta pagina.");
                 return null; // Importante retornar null después de una redirección.
             }
 
@@ -321,12 +320,18 @@ public class App {
             return new ModelAndView(new HashMap<>(), "profesor.mustache");
         }, new MustacheTemplateEngine());
 
+        //alta-profesor OKKK
         get("/alta-profesor", (req, res) -> {
             Map<String, Object> model = new HashMap<>(); // Modelo para la plantilla del dashboard.
 
-            // Intenta obtener el nombre de usuario y la bandera de login de la sesión.
-            String currentUsername = req.session().attribute("currentUserUsername");
             Boolean loggedIn = req.session().attribute("loggedIn");
+            if ( loggedIn == null || !loggedIn) {
+                System.out.println("DEBUG: Acceso no autorizado a /dashboard. Redirigiendo a /login.");
+                // Redirige al login con un mensaje de error.
+                res.redirect("?error=Debes iniciar sesion para acceder a esta pagina.");
+                return null; // Importante retornar null después de una redirección.
+            }
+
 
             // Obtener y añadir mensaje de éxito de los query parameters (ej. ?message=Cuenta creada!)
             String successMessage = req.queryParams("message");
@@ -343,19 +348,6 @@ public class App {
                 System.out.println("DEBUGGG :::::::::::::::"+errorMessage);
                 model.put("errorMessage", errorMessage);
             }
-
-            // 1. Verificar si el usuario ha iniciado sesión.
-            // Si no hay un nombre de usuario en la sesión, la bandera es nula o falsa,
-            // significa que el usuario no está logueado o su sesión expiró.
-            if (currentUsername == null || loggedIn == null || !loggedIn) {
-                System.out.println("DEBUG: Acceso no autorizado a /dashboard. Redirigiendo a /login.");
-                // Redirige al login con un mensaje de error.
-                res.redirect("/login?error=Debes iniciar sesión para acceder a esta página.");
-                return null; // Importante retornar null después de una redirección.
-            }
-
-            // 2. Si el usuario está logueado, añade el nombre de usuario al modelo para la plantilla.
-            model.put("username", currentUsername);
             return new ModelAndView(model, "alta_profesor.mustache");
         }, new MustacheTemplateEngine());
 
@@ -419,10 +411,18 @@ public class App {
                 
         } );
         
-
+        //listar-profesores OKKK
         get("/listar-profesores", (req, res) -> {
             Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
          
+            Boolean loggedIn = req.session().attribute("loggedIn");
+            if ( loggedIn == null || !loggedIn) {
+                System.out.println("DEBUG: Acceso no autorizado a /dashboard. Redirigiendo a /login.");
+                // Redirige al login con un mensaje de error.
+                res.redirect("?error=Debes iniciar sesion para acceder a esta pagina.");
+                return null; // Importante retornar null después de una redirección.
+            }
+
         try {
         
             List<PersonaConcreta> profesores = PersonaConcreta.findAll();
@@ -443,17 +443,15 @@ public class App {
 
         } catch (Exception e) {
             System.err.println("Error al listar profesores: " + e.getMessage());
-            e.printStackTrace();
+            res.redirect("/error?error=error al listar profesores");
         }
 
-
-
-            // Renderiza la plantilla 'user_form.mustache' con los datos del modelo.
+            // Renderiza la plantilla 'table_form.mustache' con los datos del modelo.
             return new ModelAndView(model, "table_profesor.mustache");
         }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
 
 
-
+        //pestaña de error OKKK
         get("/error", (req, res) -> {
             Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
 
