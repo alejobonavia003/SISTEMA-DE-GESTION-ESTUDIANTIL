@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 // Importaciones necesarias para la aplicación Spark
 import java.util.HashMap; // Utilidad para serializar/deserializar objetos Java a/desde JSON.
+import java.util.List;
 import java.util.Map; // Importa los métodos estáticos principales de Spark (get, post, before, after, etc.).
 
 import org.javalite.activejdbc.Base; // Clase central de ActiveJDBC para gestionar la conexión a la base de datos.
@@ -424,18 +425,40 @@ public class App {
             return new ModelAndView(model, "alta_profesor.mustache");
         }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
 
-       /** get("/listar-profesores", (req, res) -> {
+        get("/listar-profesores", (req, res) -> {
             Map<String, Object> model = new HashMap<>(); // Crea un mapa para pasar datos a la plantilla.
-            ArrayList<Profesor> profesores = new ArrayList<>();
+            //ArrayList<Profesor> profesores = new ArrayList<>();
 
             //profesores.addAll(Base.findAll("profesor"));
-            System.out.print(Base.findAll("select * from Profesor"));
-            //model.put();            
-            
+            //System.out.print(Base.findAll("select * from Profesor"));           
+        try {
+        
+            List<PersonaConcreta> profesores = PersonaConcreta.findAll();
+
+            // Crear una lista de mapas para pasar a la vista Mustache  
+            List<Map<String, Object>> listaProfesores = new ArrayList<>();   
+            for (PersonaConcreta p : profesores) {
+                Map<String, Object> profMap = new HashMap<>();
+                profMap.put("id", p.getDni());
+                profMap.put("nombre", p.getNombre());
+                profMap.put("apellido", p.getApellido());
+                profMap.put("dni", p.getDni());
+                listaProfesores.add(profMap);
+               // System.out.println("DEBUG::::::::::::::::::     "+p.getInteger("dni"));
+            }
+            // Agregar la lista al modelo con la clave 'profesores'
+            model.put("profesores", listaProfesores);
+
+        } catch (Exception e) {
+            System.err.println("Error al listar profesores: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
 
             // Renderiza la plantilla 'user_form.mustache' con los datos del modelo.
             return new ModelAndView(model, "table_profesor.mustache");
         }, new MustacheTemplateEngine()); // Especifica el motor de plantillas para esta ruta.
-**/
+
     } // Fin del método main
 } // Fin de la clase App
